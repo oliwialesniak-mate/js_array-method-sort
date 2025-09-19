@@ -2,7 +2,8 @@ Object.defineProperty([].__proto__, 'sort2', {
   value: function(compareFunction) {
     if (this == null) throw new TypeError('Cannot read property of null or undefined');
 
-    if (arguments.length > 0 && typeof compareFunction !== 'function') {
+    // Only throw if compareFunction is not undefined and not a function
+    if (compareFunction !== undefined && typeof compareFunction !== 'function') {
       throw new TypeError('The compareFunction must be a function');
     }
 
@@ -15,7 +16,7 @@ Object.defineProperty([].__proto__, 'sort2', {
       return strA < strB ? -1 : strA > strB ? 1 : 0;
     };
 
-    const compare = compareFunction || defaultCompare;
+    const compare = (compareFunction === undefined) ? defaultCompare : compareFunction;
 
     for (let i = 0; i < n - 1; i++) {
       for (let j = 0; j < n - 1 - i; j++) {
@@ -24,15 +25,13 @@ Object.defineProperty([].__proto__, 'sort2', {
 
         if (!leftExists && !rightExists) continue;
         if (!leftExists) {
-          // hole on left → swap
           const temp = arr[j];
           arr[j] = arr[j + 1];
           arr[j + 1] = temp;
           continue;
         }
-        if (!rightExists) continue; // hole on right → no swap
+        if (!rightExists) continue;
 
-        // both exist → normal comparison
         const res = Number(compare.call(undefined, arr[j], arr[j + 1]));
         if (res > 0) {
           const temp = arr[j];
@@ -42,7 +41,7 @@ Object.defineProperty([].__proto__, 'sort2', {
       }
     }
 
-    return this; // return the array
+    return this; // return the array itself
   },
   writable: true,
   configurable: true,
