@@ -1,25 +1,35 @@
 /**
- * Custom implementation of Array.prototype.sort using sort2
- * @param {Array} arr - the array to sort
- * @param {Function} [compareFn] - optional comparison function
- * @returns {Array} - sorted array
+ * Implements Array.prototype.sort2
+ * Sorts the array in-place and returns this
+ * @param {Function} [compareFunction] - optional comparison function
  */
-function sortCustom(arr, compareFn) {
-  if (!Array.isArray(arr)) {
-    throw new TypeError('First argument must be an array');
+[].__proto__.sort2 = function(compareFunction) {
+  // Validate comparator if provided
+  if (arguments.length > 0 && typeof compareFunction !== 'function') {
+    throw new TypeError('The compareFunction must be a function');
   }
 
-  // Default comparison: lexicographic order as strings
+  // Default lexicographic comparator
   const defaultCompare = (a, b) => {
     const strA = String(a);
     const strB = String(b);
     return strA < strB ? -1 : strA > strB ? 1 : 0;
   };
 
-  const compare = typeof compareFn === 'function' ? compareFn : defaultCompare;
+  const compare = compareFunction || defaultCompare;
+  const arr = this; // reference to the array
 
-  // Use the provided sort2 method on the array
-  return [].__proto__.sort2.call(arr, compare);
-}
+  // Simple in-place bubble sort (can be replaced with any in-place algorithm)
+  const n = arr.length;
+  for (let i = 0; i < n - 1; i++) {
+    for (let j = 0; j < n - 1 - i; j++) {
+      if (compare(arr[j], arr[j + 1]) > 0) {
+        const temp = arr[j];
+        arr[j] = arr[j + 1];
+        arr[j + 1] = temp;
+      }
+    }
+  }
 
-module.exports = sortCustom;
+  return arr; // in-place, return this
+};
