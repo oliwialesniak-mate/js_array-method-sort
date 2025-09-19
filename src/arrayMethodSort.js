@@ -22,4 +22,4 @@ function sortCustom(arr, compareFn) {
   return [].__proto__.sort2.call(arr, compare);
 }
 
-module.exports = applyCustomers;
+module.exports = sortCustom;
